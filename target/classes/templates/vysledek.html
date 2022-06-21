@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styl.css}" type="text/css">
+    <title>Vysledek</title>
+</head>
+<body>
+<h1>Sifra</h1>
+<p th:text="'Vysledek: ' + ${form.sifra}" id="vysledek"></p>
+<a href="/sifra">Zpet</a>
+</body>
+</html>

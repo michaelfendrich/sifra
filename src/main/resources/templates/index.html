@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styl.css}" type="text/css">
+    <title>Sifra</title>
+</head>
+<body>
+<h1>Viegenerova sifra</h1>
+<form action="#" th:action="@{/vysledek}" th:object="${sifra}" method="post">
+    <input type="radio" id="option1" name="option1" class="custom-control-input" value="1" th:field="*{operace}">
+    <label class="custom-control-label" for="option1">Sifrovani</label>
+    <input type="radio" id="option2" name="option2" class="custom-control-input" value="2" th:field="*{operace}">
+    <label class="custom-control-label" for="option2">Desifrovani</label>
+    <h4>Text k zafifrovani</h4>
+    <textarea th:field="*{text}" cols="60" rows="5"></textarea>
+    <h4>Heslo</h4>
+    <input type="text" th:field="*{heslo}"></br>
+    <input type="submit" id="tlacitko" value="Submit">
+</form>
+<script>
+document.getElementById("option1").setAttribute("checked","checked")
+</script>
+</body>
+</html>
