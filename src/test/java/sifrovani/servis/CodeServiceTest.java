@@ -1,6 +1,7 @@
 package sifrovani.servis;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import sifrovani.form.Form;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,11 +33,36 @@ class CodeServiceTest {
     }
 
     @Test
-    public  void provedDesifrovani() {
+    public void provedDesifrovani() {
         form.setText("sjboty bf uwuf");
         form.setHeslo("krakov");
         form.setOperace(2);
         servis.provedOperaci(form);
         assertEquals("hradec je fajn", form.getSifra());
+    }
+
+    @Test
+    public void provedChybneSifrovani() {
+        Throwable exception = assertThrows(NullPointerException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                form.setText("");
+                form.setHeslo("");
+                form.setOperace(0);
+                servis.provedOperaci(form);
+            }
+        });
+        assertEquals("Nezadal jsi operaci", exception.getMessage());
+    }
+
+    @Test
+    public void provedChybneDesifrovani1() {
+        Throwable exception = assertThrows(NullPointerException.class, () -> {
+            form.setText("");
+            form.setHeslo("");
+            form.setOperace(3);
+            servis.provedOperaci(form);
+        });
+        assertEquals("Nezadal jsi operaci", exception.getMessage());
     }
 }

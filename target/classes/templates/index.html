@@ -4,6 +4,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" th:href="@{/css/styl.css}" type="text/css">
     <title>Sifra</title>
+    <style>
+        input[type=text]:invalid, textarea:invalid {
+            box-shadow: 0 0 5px #d45252;
+            border-color: #b03535
+        }
+
+        input[type=text]:valid, textarea:valid {
+            box-shadow: 0 0 5px #5cd053;
+            border-color: #28921f;
+        }
+    </style>
 </head>
 <body>
 <h1>Viegenerova sifra</h1>
@@ -13,13 +24,26 @@
     <input type="radio" id="option2" name="option2" class="custom-control-input" value="2" th:field="*{operace}">
     <label class="custom-control-label" for="option2">Desifrovani</label>
     <h4>Text k zafifrovani</h4>
-    <textarea th:field="*{text}" cols="60" rows="5"></textarea>
+    <textarea th:field="*{text}" cols="60" rows="5" required></textarea>
     <h4>Heslo</h4>
-    <input type="text" th:field="*{heslo}"></br>
-    <input type="submit" id="tlacitko" value="Submit">
+    <input type="text" th:field="*{heslo}" required></br>
+    <input type="submit" id="tlacitko" value="Submit", disabled = false>
 </form>
 <script>
-document.getElementById("option1").setAttribute("checked","checked")
+document.getElementById("option1").setAttribute("checked","checked");
+const textArea = document.querySelector("textarea");
+const hesloArea = document.querySelector("input[type=text]");
+const tlacitko = document.getElementById("tlacitko");
+textArea.addEventListener("input", tlacitkoDisabled);
+hesloArea.addEventListener("input", tlacitkoDisabled);
+
+function tlacitkoDisabled() {
+    if (!textArea.value || !hesloArea.value) {
+        tlacitko.disabled = true;
+    } else {
+        tlacitko.disabled = false;
+    }
+}
 </script>
 </body>
 </html>
