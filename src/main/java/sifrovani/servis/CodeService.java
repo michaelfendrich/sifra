@@ -3,7 +3,7 @@ package sifrovani.servis;
 import org.springframework.stereotype.Service;
 import sifrovani.form.Form;
 
-import java.util.Locale;
+import java.text.Normalizer;
 
 @Service
 public class CodeService {
@@ -12,15 +12,26 @@ public class CodeService {
     String heslo;
 
     public void provedOperaci(Form form) {
-        text = form.getText().toLowerCase();
-        heslo = form.getHeslo().toLowerCase();
+        text = odstraneniZnaku(form.getText());
+        heslo = odstraneniZnaku(form.getHeslo());
+        if (text == "" || heslo == "") {
+            throw new NullPointerException("Nezadal jsi spravny format textu nebo hesla.");
+        }
         if (form.getOperace() == 1) {
             zasifruj(form);
         } else if (form.getOperace() == 2) {
             desifruj(form);
         } else {
-            throw new NullPointerException("Nezadal jsi operaci");
+            throw new NullPointerException("Nezadal jsi operaci.");
         }
+    }
+
+    private String odstraneniZnaku(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFKD)
+                .replaceAll("\\p{M}", "")
+                .replaceAll("\\p{Punct}", "")
+                .replaceAll("[0-9]","")
+                .toLowerCase().trim();
     }
 
     private Form zasifruj(Form form) {

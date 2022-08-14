@@ -33,6 +33,24 @@ class CodeServiceTest {
     }
 
     @Test
+    public void provedZasifrovaniSDiakritikou1() {
+        form.setText(" Cześć świate!");
+        form.setHeslo("Kraków.");
+        form.setOperace(1);
+        servis.provedOperaci(form);
+        assertEquals("nrfdr dojlib", form.getSifra());
+    }
+
+    @Test
+    public void provedZasifrovaniSDiakritikou2() {
+        form.setText("Žiji v Krakově");
+        form.setHeslo("Česko .");
+        form.setOperace(1);
+        servis.provedOperaci(form);
+        assertEquals("cnct y dcpntop", form.getSifra());
+    }
+
+    @Test
     public void provedDesifrovani() {
         form.setText("sjboty bf uwuf");
         form.setHeslo("krakov");
@@ -46,23 +64,45 @@ class CodeServiceTest {
         Throwable exception = assertThrows(NullPointerException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
-                form.setText("");
-                form.setHeslo("");
+                form.setText("a");
+                form.setHeslo("a");
                 form.setOperace(0);
                 servis.provedOperaci(form);
             }
         });
-        assertEquals("Nezadal jsi operaci", exception.getMessage());
+        assertEquals("Nezadal jsi operaci.", exception.getMessage());
     }
 
     @Test
     public void provedChybneDesifrovani1() {
         Throwable exception = assertThrows(NullPointerException.class, () -> {
-            form.setText("");
-            form.setHeslo("");
+            form.setText("a");
+            form.setHeslo("a");
             form.setOperace(3);
             servis.provedOperaci(form);
         });
-        assertEquals("Nezadal jsi operaci", exception.getMessage());
+        assertEquals("Nezadal jsi operaci.", exception.getMessage());
+    }
+
+    @Test
+    public void provedChybneSifrovaniSPrazdnymTextem() {
+        Throwable exception = assertThrows(NullPointerException.class, () -> {
+            form.setText(".!@3?<>#$%'");
+            form.setHeslo("a");
+            form.setOperace(1);
+            servis.provedOperaci(form);
+        });
+        assertEquals("Nezadal jsi spravny format textu nebo hesla.", exception.getMessage());
+    }
+
+    @Test
+    public void provedChybneSifrovaniSPrazdnymHeslem() {
+        Throwable exception = assertThrows(NullPointerException.class, () -> {
+            form.setText("a");
+            form.setHeslo(".?");
+            form.setOperace(1);
+            servis.provedOperaci(form);
+        });
+        assertEquals("Nezadal jsi spravny format textu nebo hesla.", exception.getMessage());
     }
 }
