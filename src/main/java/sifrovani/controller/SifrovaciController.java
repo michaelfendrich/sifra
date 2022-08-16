@@ -16,7 +16,7 @@ public class SifrovaciController {
     @Autowired
     private CodeService servis;
 
-    @GetMapping("/sifra")
+    @GetMapping("/th/sifra")
     public String print(Model model) {
         model.addAttribute("sifra", new Form());
         return "index";

@@ -11,19 +11,20 @@ public class CodeService {
     String text;
     String heslo;
 
-    public void provedOperaci(Form form) {
+    public Form provedOperaci(Form form) {
         text = odstraneniZnaku(form.getText());
         heslo = odstraneniZnaku(form.getHeslo());
         if (text == "" || heslo == "") {
             throw new NullPointerException("Nezadal jsi spravny format textu nebo hesla.");
         }
         if (form.getOperace() == 1) {
-            zasifruj(form);
+            form = zasifruj(form);
         } else if (form.getOperace() == 2) {
-            desifruj(form);
+            form = desifruj(form);
         } else {
             throw new NullPointerException("Nezadal jsi operaci.");
         }
+        return form;
     }
 
     private String odstraneniZnaku(String text) {

@@ -1,0 +1,32 @@
+h1 {
+    height: 100px;
+    width: 100%;
+    padding-top: 25px;
+    padding-left: 50px;
+    background-color: blue;
+    color: white;
+}
+
+#tlacitko {
+    height: 40px;
+    width: 100px;
+    margin-top: 10px;
+}
+
+textarea {
+    resize: none;
+}
+
+textarea:hover {
+    border: 1px solid blue;
+}
+
+#centrovac {
+	margin-left: 50px;
+    margin-top: 20px;
+}
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: rgb(235, 235, 235);
+}
