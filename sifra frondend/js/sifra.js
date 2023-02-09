@@ -1,33 +1,33 @@
-let slovo;
-let heslo;
-let tlacitko;
-let slovoText;
-let hesloText;
+let wordToCode;
+let password;
+let submitButton;
+let wordText;
+let passwordText;
 
 window.onload = function() {
-    tlacitko = document.getElementById("tlacitko");
-    slovo = document.getElementById("slovo");
-    heslo = document.getElementById("heslo");
-    slovo.addEventListener("input", tlacitkoDisabled);
-    heslo.addEventListener("input", tlacitkoDisabled);
+    submitButton = document.getElementById("submitButton");
+    wordToCode = document.getElementById("wordToCode");
+    password = document.getElementById("password");
+    wordToCode.addEventListener("input", buttonDisabled);
+    password.addEventListener("input", buttonDisabled);
     document.addEventListener("keypress", (event)=> {
         if (event.keyCode === 13) {
           event.preventDefault();
-            if (slovoText && hesloText) {
-                provedOperaci();
+            if (wordText && passwordText) {
+                performOperation();
             }
         }
     });
-    tlacitko.onclick = provedOperaci;
+    submitButton.onclick = performOperation;
 }
 
-function provedOperaci() {
+function performOperation() {
     let radioButton = document.querySelector('input[type="radio"]');
-    let cisloOperace = radioButton.checked ? 1 : 2;
+    let typeOfOperation = radioButton.checked ? 1 : 2;
     let data = {
-        text: slovo.value,
-        heslo: heslo.value,
-        operace: cisloOperace
+        text: wordToCode.value,
+        password: password.value,
+        operation: typeOfOperation
     };
     console.log(data);
     let baseURL = "http://localhost:8080/";
@@ -35,9 +35,9 @@ function provedOperaci() {
     xhr.onload = () => {
         let res = JSON.parse(xhr.response);
         console.log(res);
-        alert(res.sifra);
+        alert(res.code);
     }
-    xhr.open("POST", baseURL + "sifra");
+    xhr.open("POST", baseURL + "code");
     xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
     xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
     xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
@@ -46,13 +46,15 @@ function provedOperaci() {
     xhr.send(JSON.stringify(data));
 }
 
-function tlacitkoDisabled() {
-    slovoText = odstraneniDiakritiky(slovo.value);
-    hesloText = odstraneniDiakritiky(heslo.value);
-    tlacitko.disabled = (!slovoText || !hesloText) ? true : false;
+function buttonDisabled() {
+    wordText = removeSpecificSymbols(wordToCode.value);
+    console.log(wordText);
+    passwordText = removeSpecificSymbols(password.value);
+    console.log(passwordText);
+    submitButton.disabled = (!wordText || !passwordText) ? true : false;
 }
 
-function odstraneniDiakritiky(element) {
+function removeSpecificSymbols(element) {
     element = element.toLowerCase().replace("ł", "l");
     return element.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()@0123456789|<>"'\\?[\]]/g,"").toLowerCase().trim();

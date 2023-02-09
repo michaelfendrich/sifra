@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Form {
     private String text;
-    private int operace;
-    private String heslo;
-    private String sifra;
+    private int operation;
+    private String password;
+    private String code;
 }

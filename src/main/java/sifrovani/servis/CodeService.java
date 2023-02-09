@@ -11,23 +11,23 @@ public class CodeService {
     String text;
     String heslo;
 
-    public Form provedOperaci(Form form) {
-        text = odstraneniZnaku(form.getText());
-        heslo = odstraneniZnaku(form.getHeslo());
+    public Form perform(Form form) {
+        text = removeSpecificSymbols(form.getText());
+        heslo = removeSpecificSymbols(form.getPassword());
         if (text == "" || heslo == "") {
-            throw new NullPointerException("Nezadal jsi spravny format textu nebo hesla.");
+            throw new NullPointerException("You didn't entered a correct format of the wold or password.");
         }
-        if (form.getOperace() == 1) {
-            form = zasifruj(form);
-        } else if (form.getOperace() == 2) {
-            form = desifruj(form);
+        if (form.getOperation() == 1) {
+            form = encrypt(form);
+        } else if (form.getOperation() == 2) {
+            form = decrypt(form);
         } else {
-            throw new NullPointerException("Nezadal jsi operaci.");
+            throw new NullPointerException("Operation is required.");
         }
         return form;
     }
 
-    private String odstraneniZnaku(String text) {
+    private String removeSpecificSymbols(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFKD)
                 .replaceAll("\\p{M}", "")
                 .replaceAll("\\p{Punct}", "")
@@ -35,37 +35,37 @@ public class CodeService {
                 .toLowerCase().trim();
     }
 
-    private Form zasifruj(Form form) {
-        String vysledek = "";
+    private Form encrypt(Form form) {
+        String result = "";
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == ' ') {
-                vysledek += " ";
+                result += " ";
             } else {
-                int cisloZnaku = (int) text.charAt(i) + (int) heslo.charAt(i % heslo.length()) - 96;
-                if (cisloZnaku > (int) 'z') {
-                    cisloZnaku -= 26;
+                int numberOfLetter = (int) text.charAt(i) + (int) heslo.charAt(i % heslo.length()) - 96;
+                if (numberOfLetter > (int) 'z') {
+                    numberOfLetter -= 26;
                 }
-                vysledek += (char) cisloZnaku;
+                result += (char) numberOfLetter;
             }
         }
-        form.setSifra(vysledek);
+        form.setCode(result);
         return form;
     }
 
-    private Form desifruj(Form form) {
-        String vysledek = "";
+    private Form decrypt(Form form) {
+        String result = "";
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == ' ') {
-                vysledek += " ";
+                result += " ";
             } else {
                 int cisloZnaku = (int) text.charAt(i) - (int) heslo.charAt(i % heslo.length()) + 96;
                 if (cisloZnaku < (int) 'a') {
                     cisloZnaku += 26;
                 }
-                vysledek += (char) cisloZnaku;
+                result += (char) cisloZnaku;
             }
         }
-        form.setSifra(vysledek);
+        form.setCode(result);
         return form;
     }
 }

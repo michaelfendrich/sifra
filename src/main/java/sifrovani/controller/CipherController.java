@@ -6,25 +6,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import sifrovani.form.Form;
 import sifrovani.servis.CodeService;
 
 @Controller
-public class SifrovaciController {
+public class CipherController {
 
     @Autowired
     private CodeService servis;
 
-    @GetMapping("/th/sifra")
+    @GetMapping("/code")
     public String print(Model model) {
-        model.addAttribute("sifra", new Form());
+        model.addAttribute("code", new Form());
         return "index";
     }
 
-    @PostMapping("/vysledek")
-    public String provedOperaci(@ModelAttribute Form form) {
-        servis.provedOperaci(form);
-        return "vysledek";
+    @PostMapping("/result")
+    public String perform(@ModelAttribute Form form) {
+        servis.perform(form);
+        return "result";
     }
 }

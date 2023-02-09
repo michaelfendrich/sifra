@@ -25,38 +25,50 @@ class CodeServiceTest {
 
     @Test
     public void provedZasifrovani() {
+        //given
         form.setText("Hradec je fajn");
-        form.setHeslo("krakov");
-        form.setOperace(1);
-        servis.provedOperaci(form);
-        assertEquals("sjboty bf uwuf", form.getSifra());
+        form.setPassword("krakov");
+        form.setOperation(1);
+        //when
+        servis.perform(form);
+        //then
+        assertEquals("sjboty bf uwuf", form.getCode());
     }
 
     @Test
     public void provedZasifrovaniSDiakritikou1() {
+        //given
         form.setText(" Cześć świate!");
-        form.setHeslo("Kraków.");
-        form.setOperace(1);
-        servis.provedOperaci(form);
-        assertEquals("nrfdr dojlib", form.getSifra());
+        form.setPassword("Kraków.");
+        form.setOperation(1);
+        //when
+        servis.perform(form);
+        //then
+        assertEquals("nrfdr dojlib", form.getCode());
     }
 
     @Test
     public void provedZasifrovaniSDiakritikou2() {
+        //give
         form.setText("Žiji v Krakově");
-        form.setHeslo("Česko .");
-        form.setOperace(1);
-        servis.provedOperaci(form);
-        assertEquals("cnct y dcpntop", form.getSifra());
+        form.setPassword("Česko .");
+        form.setOperation(1);
+        //when
+        servis.perform(form);
+        //then
+        assertEquals("cnct y dcpntop", form.getCode());
     }
 
     @Test
     public void provedDesifrovani() {
+        //given
         form.setText("sjboty bf uwuf");
-        form.setHeslo("krakov");
-        form.setOperace(2);
-        servis.provedOperaci(form);
-        assertEquals("hradec je fajn", form.getSifra());
+        form.setPassword("krakov");
+        form.setOperation(2);
+        //when
+        servis.perform(form);
+        //then
+        assertEquals("hradec je fajn", form.getCode());
     }
 
     @Test
@@ -65,44 +77,55 @@ class CodeServiceTest {
             @Override
             public void execute() throws Throwable {
                 form.setText("a");
-                form.setHeslo("a");
-                form.setOperace(0);
-                servis.provedOperaci(form);
+                form.setPassword("a");
+                form.setOperation(0);
+                servis.perform(form);
             }
         });
-        assertEquals("Nezadal jsi operaci.", exception.getMessage());
+        assertEquals("Operation is required.", exception.getMessage());
     }
 
     @Test
     public void provedChybneDesifrovani1() {
+        //give
+        form.setText("a");
+        form.setPassword("a");
+        form.setOperation(3);
+
+        //when
         Throwable exception = assertThrows(NullPointerException.class, () -> {
-            form.setText("a");
-            form.setHeslo("a");
-            form.setOperace(3);
-            servis.provedOperaci(form);
+            servis.perform(form);
         });
-        assertEquals("Nezadal jsi operaci.", exception.getMessage());
+        //then
+        assertEquals("Operation is required.", exception.getMessage());
     }
 
     @Test
     public void provedChybneSifrovaniSPrazdnymTextem() {
+        //given
+        form.setText(".!@3?<>#$%'");
+        form.setPassword("a");
+        form.setOperation(1);
+
+        //when
         Throwable exception = assertThrows(NullPointerException.class, () -> {
-            form.setText(".!@3?<>#$%'");
-            form.setHeslo("a");
-            form.setOperace(1);
-            servis.provedOperaci(form);
+            servis.perform(form);
         });
-        assertEquals("Nezadal jsi spravny format textu nebo hesla.", exception.getMessage());
+        //then
+        assertEquals("You didn't entered a correct format of the wold or password.", exception.getMessage());
     }
 
     @Test
     public void provedChybneSifrovaniSPrazdnymHeslem() {
+        //give
+        form.setText("a");
+        form.setPassword(".?");
+        form.setOperation(1);
+        //when
         Throwable exception = assertThrows(NullPointerException.class, () -> {
-            form.setText("a");
-            form.setHeslo(".?");
-            form.setOperace(1);
-            servis.provedOperaci(form);
+            servis.perform(form);
         });
-        assertEquals("Nezadal jsi spravny format textu nebo hesla.", exception.getMessage());
+        //then
+        assertEquals("You didn't entered a correct format of the wold or password.", exception.getMessage());
     }
 }

@@ -18,39 +18,39 @@
     </style>
 </head>
 <body>
-<h1>Viegenerova sifra</h1>
-<form action="#" th:action="@{/vysledek}" th:object="${sifra}" method="post">
+<h1>Vigenère cipher</h1>
+<form action="#" th:action="@{/result}" th:object="${code}" method="post">
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="1" th:field="*{operace}">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="1" th:field="*{operation}">
         <label class="form-check-label" for="flexRadioDefault1">
-          Sifrovani
+            Encryption
         </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="2" th:field="*{operace}">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="2" th:field="*{operation}">
         <label class="form-check-label" for="flexRadioDefault2">
-          Desifrovani
+            Decryption
         </label>
       </div>
-    <h4>Text k zafifrovani</h4>
+    <h4>Provide text</h4>
     <textarea th:field="*{text}" cols="60" rows="5" required></textarea>
-    <h4>Heslo</h4>
-    <input type="text" th:field="*{heslo}" required></br>
-    <input class="btn btn-primary" type="submit" id="tlacitko" value="Submit" disabled="false">
+    <h4>Password</h4>
+    <input type="text" th:field="*{password}" required></br>
+    <input class="btn btn-primary" type="submit" id="button" value="Submit" disabled="false">
 </form>
 <script>
 document.getElementById("flexRadioDefault1").setAttribute("checked", "checked");
 const textArea = document.querySelector("textarea");
-const hesloArea = document.querySelector("input[type=text]");
-const tlacitko = document.getElementById("tlacitko");
-textArea.addEventListener("input", tlacitkoDisabled);
-hesloArea.addEventListener("input", tlacitkoDisabled);
+const passwordArea = document.querySelector("input[type=text]");
+const button = document.getElementById("button");
+passwordArea.addEventListener("input", buttonDisabled);
+hesloArea.addEventListener("input", buttonDisabled);
 
-function tlacitkoDisabled() {
-    if (!textArea.value || !hesloArea.value) {
-        tlacitko.disabled = true;
+function buttonDisabled() {
+    if (!textArea.value || !passwordArea.value) {
+        button.disabled = true;
     } else {
-        tlacitko.disabled = false;
+        button.disabled = false;
     }
 }
 </script>
