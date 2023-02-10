@@ -23,7 +23,7 @@ window.onload = function() {
 
 function performOperation() {
     let radioButton = document.querySelector('input[type="radio"]');
-    let typeOfOperation = radioButton.checked ? 1 : 2;
+    let typeOfOperation = radioButton.checked ? "ENCRYPTION" : "DECRYPTION";
     let data = {
         text: wordToCode.value,
         password: password.value,

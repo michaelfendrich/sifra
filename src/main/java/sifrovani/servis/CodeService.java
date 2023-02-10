@@ -9,17 +9,17 @@ import java.text.Normalizer;
 public class CodeService {
 
     String text;
-    String heslo;
+    String password;
 
     public Form perform(Form form) {
         text = removeSpecificSymbols(form.getText());
-        heslo = removeSpecificSymbols(form.getPassword());
-        if (text == "" || heslo == "") {
+        password = removeSpecificSymbols(form.getPassword());
+        if (text == "" || password == "") {
             throw new NullPointerException("You didn't entered a correct format of the wold or password.");
         }
-        if (form.getOperation() == 1) {
+        if (form.getOperation() == CodingType.ENCRYPTION) {
             form = encrypt(form);
-        } else if (form.getOperation() == 2) {
+        } else if (form.getOperation() == CodingType.DECRYPTION) {
             form = decrypt(form);
         } else {
             throw new NullPointerException("Operation is required.");
@@ -41,7 +41,7 @@ public class CodeService {
             if (text.charAt(i) == ' ') {
                 result += " ";
             } else {
-                int numberOfLetter = (int) text.charAt(i) + (int) heslo.charAt(i % heslo.length()) - 96;
+                int numberOfLetter = (int) text.charAt(i) + (int) password.charAt(i % password.length()) - 96;
                 if (numberOfLetter > (int) 'z') {
                     numberOfLetter -= 26;
                 }
@@ -58,11 +58,11 @@ public class CodeService {
             if (text.charAt(i) == ' ') {
                 result += " ";
             } else {
-                int cisloZnaku = (int) text.charAt(i) - (int) heslo.charAt(i % heslo.length()) + 96;
-                if (cisloZnaku < (int) 'a') {
-                    cisloZnaku += 26;
+                int numberOfLetter = (int) text.charAt(i) - (int) password.charAt(i % password.length()) + 96;
+                if (numberOfLetter < (int) 'a') {
+                    numberOfLetter += 26;
                 }
-                result += (char) cisloZnaku;
+                result += (char) numberOfLetter;
             }
         }
         form.setCode(result);

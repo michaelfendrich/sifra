@@ -1,131 +1,92 @@
 package sifrovani.servis;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import sifrovani.form.Form;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CodeServiceTest {
 
-    private CodeService servis;
+    private CodeService service;
     private Form form;
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     void setUp() {
-        servis = new CodeService();
+        service = new CodeService();
         form = new Form();
     }
 
-    @org.junit.jupiter.api.AfterEach
+    @AfterEach
     void tearDown() {
-        servis = null;
+        service = null;
         form = null;
     }
 
-    @Test
-    public void provedZasifrovani() {
+    @ParameterizedTest
+    @MethodSource("prepareCsvForCoding")
+    public void shouldReturnCorrectCode(String textToCode, String password, CodingType type, String result) {
         //given
-        form.setText("Hradec je fajn");
-        form.setPassword("krakov");
-        form.setOperation(1);
+        form.setText(textToCode);
+        form.setPassword(password);
+        form.setOperation(type);
         //when
-        servis.perform(form);
+        service.perform(form);
         //then
-        assertEquals("sjboty bf uwuf", form.getCode());
+        assertEquals(result, form.getCode());
     }
 
     @Test
-    public void provedZasifrovaniSDiakritikou1() {
-        //given
-        form.setText(" Cześć świate!");
-        form.setPassword("Kraków.");
-        form.setOperation(1);
-        //when
-        servis.perform(form);
-        //then
-        assertEquals("nrfdr dojlib", form.getCode());
-    }
-
-    @Test
-    public void provedZasifrovaniSDiakritikou2() {
-        //give
-        form.setText("Žiji v Krakově");
-        form.setPassword("Česko .");
-        form.setOperation(1);
-        //when
-        servis.perform(form);
-        //then
-        assertEquals("cnct y dcpntop", form.getCode());
-    }
-
-    @Test
-    public void provedDesifrovani() {
-        //given
-        form.setText("sjboty bf uwuf");
-        form.setPassword("krakov");
-        form.setOperation(2);
-        //when
-        servis.perform(form);
-        //then
-        assertEquals("hradec je fajn", form.getCode());
-    }
-
-    @Test
-    public void provedChybneSifrovani() {
+    public void shouldReturnNullPointerExceptionBecauseOperationIsNull() {
         Throwable exception = assertThrows(NullPointerException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
                 form.setText("a");
                 form.setPassword("a");
-                form.setOperation(0);
-                servis.perform(form);
+                form.setOperation(null);
+                service.perform(form);
             }
         });
         assertEquals("Operation is required.", exception.getMessage());
     }
 
-    @Test
-    public void provedChybneDesifrovani1() {
-        //give
-        form.setText("a");
-        form.setPassword("a");
-        form.setOperation(3);
-
-        //when
-        Throwable exception = assertThrows(NullPointerException.class, () -> {
-            servis.perform(form);
-        });
-        //then
-        assertEquals("Operation is required.", exception.getMessage());
-    }
-
-    @Test
-    public void provedChybneSifrovaniSPrazdnymTextem() {
+    @ParameterizedTest
+    @MethodSource("prepareCsvToReturnExceptions")
+    public void shouldReturnNullPointerExceptionBecauseTextFormatIsNotCorrect(String textToCode, String password, CodingType type, String result) {
         //given
-        form.setText(".!@3?<>#$%'");
-        form.setPassword("a");
-        form.setOperation(1);
+        form.setText(textToCode);
+        form.setPassword(password);
+        form.setOperation(type);
 
         //when
         Throwable exception = assertThrows(NullPointerException.class, () -> {
-            servis.perform(form);
+            service.perform(form);
         });
         //then
-        assertEquals("You didn't entered a correct format of the wold or password.", exception.getMessage());
+        assertEquals(result, exception.getMessage());
     }
 
-    @Test
-    public void provedChybneSifrovaniSPrazdnymHeslem() {
-        //give
-        form.setText("a");
-        form.setPassword(".?");
-        form.setOperation(1);
-        //when
-        Throwable exception = assertThrows(NullPointerException.class, () -> {
-            servis.perform(form);
-        });
-        //then
-        assertEquals("You didn't entered a correct format of the wold or password.", exception.getMessage());
+    public static Stream<Arguments> prepareCsvForCoding() {
+        return Stream.of(
+                Arguments.of("Hradec je fajn", "krakov", CodingType.ENCRYPTION, "sjboty bf uwuf"),
+                Arguments.of(" Cześć świate!", "Kraków", CodingType.ENCRYPTION, "nrfdr dojlib"),
+                Arguments.of("Žiji v Krakově", "Česko .", CodingType.ENCRYPTION, "cnct y dcpntop"),
+                Arguments.of("sjboty bf uwuf", "krakov", CodingType.DECRYPTION, "hradec je fajn")
+
+        );
+    }
+
+    public static Stream<Arguments> prepareCsvToReturnExceptions() {
+        return Stream.of(
+                Arguments.of(".!@3?<>#$%'", "a", CodingType.ENCRYPTION, "You didn't entered a correct format of the wold or password."),
+                Arguments.of("a", ".?", CodingType.ENCRYPTION, "You didn't entered a correct format of the wold or password.")
+        );
     }
 }

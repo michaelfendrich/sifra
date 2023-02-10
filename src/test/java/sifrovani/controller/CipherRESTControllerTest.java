@@ -7,6 +7,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import sifrovani.form.Form;
+import sifrovani.servis.CodingType;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,7 +28,7 @@ class CipherRESTControllerTest {
         //given
         URI uri = new URI("http://localhost:" + port + "/code");
         Form form = new Form();
-        form.setOperation(1);
+        form.setOperation(CodingType.ENCRYPTION);
         form.setPassword("Kraków");
         form.setText(" Cześć świate!");
         HttpHeaders httpHeaders = new HttpHeaders();
